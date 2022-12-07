@@ -16,7 +16,7 @@ on:
     #     required: true
 jobs:
   build:
-    name: Checks
+    name: Python install and build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -35,16 +35,17 @@ jobs:
 
     # Linting, testing, etc. would go below this...
   deploy:
+    name: Deploy to AWS Elastic Beanstalk
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
 
       - name: Configure AWS credentials from Test account
         uses: aws-actions/configure-aws-credentials@v1
-        permissions:
-          id-token: write # This is required for requesting the JWT
-          contents: read
         with:
           role-to-assume: arn:aws:iam::364804350459:role/github-actions
           aws-region: us-east-2
