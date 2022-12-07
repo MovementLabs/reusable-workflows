@@ -4,6 +4,15 @@ on:
       application_name:
         required: true
         type: string
+      platform:
+        description: eb init platform option - https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb3-init.html
+        required: true
+        default: python
+        type: string
+      region:
+        description: AWS region to deploy to
+        default: us-east-2
+        type: string
       # environment_name:
       #   required: true
       #   type: string
@@ -49,24 +58,32 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           role-to-assume: arn:aws:iam::364804350459:role/github-actions
-          aws-region: us-east-2
+          aws-region: ${{ inputs.region }}
 
       - name: Beanstalk describe-applications
         run: aws elasticbeanstalk describe-applications
 
-      - run: eb init ${{ inputs.application_name }}
-      # - name: Beanstalk create-application
-      #   run: aws elasticbeanstalk create-application --application-name ${{ inputs.application_name }}
+      # - name: eb install
+      #   run: >
+      #     git clone https://github.com/aws/aws-elastic-beanstalk-cli-setup.git;
+      #     python ./aws-elastic-beanstalk-cli-setup/scripts/ebcli_installer.py;
+      #     eb init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }};
+
+      # --platform ${{ inputs.platform }}
+      - name: Beanstalk create-application
+        run: aws elasticbeanstalk create-application --application-name ${{ inputs.application_name }}
 
       # - name: Beanstalk create-application-version
       #   run: aws elasticbeanstalk create-application-version \
       #     --application-name ${{ inputs.application_name }} \
       #     --version-label "ver-${{ github.sha }}" \
       #     --description "commit-sha-${{ github.sha }}"
+
       - name: codecommit credentials
         run: |
           git config --global credential.helper '!aws codecommit credential-helper $@'; \
           git config --global credential.UseHttpPath true
+
       # - name: codecommit sync
       #   #TODO: setup variable for multiple regions
       #   run: git remote add codecommit-origin https://git-codecommit.us-east-2.amazonaws.com/v1/repos/${{ inputs.application_name }}
