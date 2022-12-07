@@ -1,0 +1,72 @@
+on:
+  workflow_call:
+    inputs:
+      application_name:
+        required: true
+        type: string
+      # environment_name:
+      #   required: true
+      #   type: string
+      #TODO: what are the type options here?
+      # version_label:
+      #   required: true
+      # type: number
+    # secrets:
+    #   envPAT:
+    #     required: true
+jobs:
+  build:
+    name: Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+
+      # - uses: actions/cache@v2
+      #   with:
+      #     path: ${{ env.pythonLocation }}
+      #     key: ${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ hashFiles('requirements.txt') }}
+
+      - name: Install requirements
+        run: |
+          pip install -r requirements.txt -e .
+
+    # Linting, testing, etc. would go below this...
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials from Test account
+        uses: aws-actions/configure-aws-credentials@v1
+        permissions:
+          id-token: write # This is required for requesting the JWT
+          contents: read
+        with:
+          role-to-assume: arn:aws:iam::364804350459:role/github-actions
+          aws-region: us-east-2
+
+      - name: Check Authorized for EB
+        run: aws elasticbeanstalk describe-applications
+
+      # - name: Generate deployment package
+      #   run: zip -r deploy.zip . -x '*.git*'
+
+      # - name: Deploy to EB
+
+      # - name: Deploy to EB
+      #   uses: einaregilsson/beanstalk-deploy@v21
+      #   with:
+      #     #TODO: where does this access token come from?
+      #     aws_session_token: ${{ env.AWS_SESSION_TOKEN }}
+      #     # aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     # aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      #     application_name: MyApplicationName
+      #     environment_name: MyApplication-Environment
+      #     version_label: 12345
+      #     region: us-east-2
+      #     deployment_package: deploy.zip
