@@ -4,9 +4,12 @@ on:
       application_name:
         required: true
         type: string
-      # environment_name:
-      #   required: true
-      #   type: string
+      environment_name:
+        required: true
+        type: string
+      repo_name:
+        required: true
+        type: string
       #TODO: what are the type options here?
       # version_label:
       #   required: true
@@ -51,8 +54,25 @@ jobs:
           role-to-assume: arn:aws:iam::364804350459:role/github-actions
           aws-region: us-east-2
 
-      - name: Check Authorized for EB
+      - name: Beanstalk describe-applications
         run: aws elasticbeanstalk describe-applications
+
+      - name: sync codecommit
+        #TODO: setup variable for multiple regions
+        run:
+          git remote add codecommit-origin https://git-codecommit.us-east-2.amazonaws.com/v1/repos/${{ inputs.repo_name }} \
+          git push
+
+      # - name: Beanstalk create-application-version
+      #   run: aws elasticbeanstalk create-application-version \
+      #     --application-name ${{ inputs.application_name }} \
+      #     --version-label "ver-${{ github.sha }}" \
+      #     --description "commit-sha-${{ github.sha }}"
+
+      # - name: Beanstalk update-environment
+      #   run: aws elasticbeanstalk update-environment \
+      #     --environment-name ${{ inputs.environment }} \
+      #     --version-label "ver-${{ github.sha }}"
 
       # - name: Generate deployment package
       #   run: zip -r deploy.zip . -x '*.git*'
