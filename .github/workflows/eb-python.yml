@@ -62,15 +62,15 @@ jobs:
       - name: Beanstalk describe-applications
         run: aws elasticbeanstalk describe-applications
 
-      # - name: eb install
-      #   run: >
-      #     git clone https://github.com/aws/aws-elastic-beanstalk-cli-setup.git;
-      #     python ./aws-elastic-beanstalk-cli-setup/scripts/ebcli_installer.py;
-      #     eb init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }};
+      - name: eb install
+        run: >
+          git clone https://github.com/aws/aws-elastic-beanstalk-cli-setup.git;
+          python ./aws-elastic-beanstalk-cli-setup/scripts/ebcli_installer.py;
+          eb init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }};
 
       # --platform ${{ inputs.platform }}
-      - name: Beanstalk create-application
-        run: aws elasticbeanstalk create-application --application-name ${{ inputs.application_name }}
+      # - name: Beanstalk create-application
+      #   run: aws elasticbeanstalk create-application --application-name ${{ inputs.application_name }}
 
       # - name: Beanstalk create-application-version
       #   run: aws elasticbeanstalk create-application-version \
