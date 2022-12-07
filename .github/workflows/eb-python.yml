@@ -55,8 +55,8 @@ jobs:
         run: aws elasticbeanstalk describe-applications
 
       - name: codecommit credentials
-        run: >
-          git config --global credential.helper '!aws codecommit credential-helper $@'
+        run: |
+          git config --global credential.helper '!aws codecommit credential-helper $@'; \
           git config --global credential.UseHttpPath true
 
       - name: codecommit sync
