@@ -56,9 +56,7 @@ jobs:
 
       - name: sync codecommit
         #TODO: setup variable for multiple regions
-        run: |
-          git remote add codecommit-origin https://git-codecommit.us-east-2.amazonaws.com/v1/repos/${{ inputs.application_name }} \
-          git push
+        run: git remote add codecommit-origin https://git-codecommit.us-east-2.amazonaws.com/v1/repos/${{ inputs.application_name }}
 
       # - name: Beanstalk create-application-version
       #   run: aws elasticbeanstalk create-application-version \
