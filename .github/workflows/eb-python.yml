@@ -54,22 +54,24 @@ jobs:
       - name: Beanstalk describe-applications
         run: aws elasticbeanstalk describe-applications
 
-      - name: codecommit credentials
-        run: |
-          git config --global credential.helper '!aws codecommit credential-helper $@'; \
-          git config --global credential.UseHttpPath true
-
-      - name: codecommit sync
-        #TODO: setup variable for multiple regions
-        run: git remote add codecommit-origin https://git-codecommit.us-east-2.amazonaws.com/v1/repos/${{ inputs.application_name }}
-      - name: push codecommit push
-        run: git push codecommit-origin
+      - name: Beanstalk create-application
+        run: aws elasticbeanstalk create-application \
+          --application-name ${{ inputs.application_name }}
 
       # - name: Beanstalk create-application-version
       #   run: aws elasticbeanstalk create-application-version \
       #     --application-name ${{ inputs.application_name }} \
       #     --version-label "ver-${{ github.sha }}" \
       #     --description "commit-sha-${{ github.sha }}"
+      - name: codecommit credentials
+        run: |
+          git config --global credential.helper '!aws codecommit credential-helper $@'; \
+          git config --global credential.UseHttpPath true
+      # - name: codecommit sync
+      #   #TODO: setup variable for multiple regions
+      #   run: git remote add codecommit-origin https://git-codecommit.us-east-2.amazonaws.com/v1/repos/${{ inputs.application_name }}
+      # - name: push codecommit push
+      #   run: git push codecommit-origin
 
       # - name: Beanstalk update-environment
       #   run: aws elasticbeanstalk update-environment \
