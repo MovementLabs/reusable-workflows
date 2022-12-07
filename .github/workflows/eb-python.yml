@@ -6,7 +6,6 @@ on:
         type: string
       platform:
         description: eb init platform option - https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb3-init.html
-        required: true
         default: python
         type: string
       region:
