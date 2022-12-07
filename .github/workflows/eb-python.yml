@@ -64,6 +64,7 @@ jobs:
 
       - name: eb install
         run: >
+          python -m pip install --user virtualenv;
           git clone https://github.com/aws/aws-elastic-beanstalk-cli-setup.git;
           python ./aws-elastic-beanstalk-cli-setup/scripts/ebcli_installer.py;
           eb init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }};
