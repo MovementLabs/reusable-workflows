@@ -56,7 +56,7 @@ jobs:
 
       - name: sync codecommit
         #TODO: setup variable for multiple regions
-        run:
+        run: |
           git remote add codecommit-origin https://git-codecommit.us-east-2.amazonaws.com/v1/repos/${{ inputs.application_name }} \
           git push
 
