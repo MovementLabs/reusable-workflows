@@ -54,7 +54,7 @@ jobs:
       - name: Beanstalk describe-applications
         run: aws elasticbeanstalk describe-applications
 
-      - run: eb init ${{ application_name }}
+      - run: eb init ${{ inputs.application_name }}
       # - name: Beanstalk create-application
       #   run: aws elasticbeanstalk create-application --application-name ${{ inputs.application_name }}
 
