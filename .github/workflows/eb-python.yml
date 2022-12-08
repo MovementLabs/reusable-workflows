@@ -81,11 +81,11 @@ jobs:
           git config --global credential.helper '!aws codecommit credential-helper $@'; \
           git config --global credential.UseHttpPath true
 
-      - name: codecommit sync
-        #TODO: setup variable for multiple regions
-        run: git remote add codecommit-origin https://git-codecommit.${{ inputs.region }}.amazonaws.com/v1/repos/${{ inputs.application_name }}
-      - name: push codecommit push
-        run: git push codecommit-origin
+      # - name: codecommit sync
+      #   #TODO: setup variable for multiple regions
+      #   run: git remote add codecommit-origin https://git-codecommit.${{ inputs.region }}.amazonaws.com/v1/repos/${{ inputs.application_name }}
+      # - name: push codecommit push
+      #   run: git push codecommit-origin
 
       - name: Beanstalk create-application-version
         run:
