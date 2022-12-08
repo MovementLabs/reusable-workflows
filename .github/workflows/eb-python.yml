@@ -87,12 +87,10 @@ jobs:
       # - name: push codecommit push
       #   run: git push codecommit-origin
       - name: Beanstalk create-application-version
-        run: |
-          aws elasticbeanstalk create-application-version \
-          --application-name ${{ inputs.application_name }}
-
-        # --version-label "ver-${{ github.sha }}" \
-        # --description "commit-sha-${{ github.sha }}"
+        run: aws elasticbeanstalk create-application-version \
+          --application-name ${{ inputs.application_name }} \
+          --version-label "ver-${{ github.sha }}" \
+          --description "commit-sha-${{ github.sha }}"
 
       # - name: Beanstalk update-environment
       #   run: aws elasticbeanstalk update-environment \
