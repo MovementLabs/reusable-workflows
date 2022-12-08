@@ -72,8 +72,8 @@ jobs:
 
       # --platform ${{ inputs.platform }}
 
-      - name: Beanstalk create-application
-        run: aws elasticbeanstalk create-application --application-name ${{ inputs.application_name }}
+      # - name: Beanstalk create-application
+      #   run: aws elasticbeanstalk create-application --application-name ${{ inputs.application_name }}
 
       # - name: Beanstalk create-application-version
       #   run: aws elasticbeanstalk create-application-version \
