@@ -132,7 +132,7 @@ jobs:
           aws_access_key: ${{ env.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           application_name: ${{ inputs.application_name }}
-          environment_name: ${{ inputs.environment }}
+          environment_name: ${{ inputs.environment_name }}
           version_label: ${{ github.sha }}
           region: ${{ inputs.region }}
           deployment_package: deploy.zip
