@@ -59,8 +59,12 @@ jobs:
           role-to-assume: arn:aws:iam::364804350459:role/github-actions
           aws-region: ${{ inputs.region }}
 
-      - name: Beanstalk describe-applications
-        run: aws elasticbeanstalk describe-applications
+      - name: Beanstalk describe then create
+        run: |
+          aws elasticbeanstalk describe-applications \
+          | grep '"ApplicationName": "${{ inputs.application_name }}"' \
+          || aws elasticbeanstalk create-application \
+          --application-name ${{ inputs.application_name }}
 
       # - name: eb install
       #   run: >
@@ -71,9 +75,6 @@ jobs:
       #     eb init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }};
 
       # --platform ${{ inputs.platform }}
-
-      - name: Beanstalk create-application
-        run: aws elasticbeanstalk create-application --application-name ${{ inputs.application_name }}
 
       # - name: Beanstalk create-application-version
       #   run: aws elasticbeanstalk create-application-version \
@@ -97,8 +98,8 @@ jobs:
       #     --environment-name ${{ inputs.environment }} \
       #     --version-label "ver-${{ github.sha }}"
 
-      - name: Generate deployment package
-        run: zip -r deploy.zip . -x '*.git*'
+      # - name: Generate deployment package
+      #   run: zip -r deploy.zip . -x '*.git*'
 
       # - name: Deploy to EB
       #   uses: einaregilsson/beanstalk-deploy@v21
