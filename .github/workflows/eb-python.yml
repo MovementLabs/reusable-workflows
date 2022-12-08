@@ -93,27 +93,27 @@ jobs:
       #   run: git remote add codecommit-origin https://git-codecommit.${{ inputs.region }}.amazonaws.com/v1/repos/${{ inputs.application_name }}
       # - name: push codecommit push
       #   run: git push codecommit-origin
-      # safely create
-      # - name: Beanstalk create-application-version
-      #   run: |
-      #     aws elasticbeanstalk describe-application-versions \
-      #     --version-label "ver-${{ github.sha }}" \
-      #     | grep '"ApplicationName": "${{ inputs.application_name }}"' \
-      #     || aws elasticbeanstalk create-application-version \
-      #     --application-name ${{ inputs.application_name }} \
-      #     --version-label "ver-${{ github.sha }}" \
-      #     --description "commit-sha-${{ github.sha }}"
+      # safely create (check if exists) application version
+      - name: Beanstalk create-application-version
+        run: |
+          aws elasticbeanstalk describe-application-versions \
+          --version-label "ver-${{ github.sha }}" \
+          | grep '"ApplicationName": "${{ inputs.application_name }}"' \
+          || aws elasticbeanstalk create-application-version \
+          --application-name ${{ inputs.application_name }} \
+          --version-label "ver-${{ github.sha }}" \
+          --description "commit-sha-${{ github.sha }}"
 
-      # # safe create (check if exists)
-      # - name: Beanstalk create-environment
-      #   run: |
-      #     aws elasticbeanstalk describe-environments \
-      #     --application-name ${{ inputs.application_name}} \
-      #     | grep '"ApplicationName": "${{ inputs.application_name }}"' \
-      #     || aws elasticbeanstalk create-environment \
-      #     --application-name ${{ inputs.application_name}} \
-      #     --environment-name ${{ inputs.environment_name }} \
-      #     --solution-stack-name "${{ inputs.solution_stack_name }}"
+      # safe create (check if exists) environment
+      - name: Beanstalk create-environment
+        run: |
+          aws elasticbeanstalk describe-environments \
+          --application-name ${{ inputs.application_name}} \
+          | grep '"ApplicationName": "${{ inputs.application_name }}"' \
+          || aws elasticbeanstalk create-environment \
+          --application-name ${{ inputs.application_name}} \
+          --environment-name ${{ inputs.environment_name }} \
+          --solution-stack-name "${{ inputs.solution_stack_name }}"
 
       # - name: Beanstalk update-environment
       #   run: |
