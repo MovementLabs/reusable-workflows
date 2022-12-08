@@ -4,9 +4,9 @@ on:
       application_name:
         required: true
         type: string
-      platform:
-        description: eb init platform option - https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb3-init.html
-        default: python
+      solution_stack_name:
+        description: aws list-available-solution-stacks
+        default: 64bit Amazon Linux 2 v3.4.2 running Python 3.8
         type: string
       region:
         description: AWS region to deploy to
@@ -98,6 +98,17 @@ jobs:
           --application-name ${{ inputs.application_name }} \
           --version-label "ver-${{ github.sha }}" \
           --description "commit-sha-${{ github.sha }}"
+
+      # safe create (check if exists)
+      - name: Beanstalk create-environment
+        run: |
+          aws elasticbeanstalk describe-environments \
+          --application-name ${{ inputs.application_name}} \
+          | grep '"ApplicationName": "${{ inputs.application_name }}"' \
+          || aws elasticbeanstalk create-environment \
+          --application-name ${{ inputs.application_name}}
+          --environment-name ${{ environment_name }}
+          --solution-stack-name ${{ inputs.solution_stack_name }}
 
       - name: Beanstalk update-environment
         run: |
