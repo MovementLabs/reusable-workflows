@@ -107,7 +107,7 @@ jobs:
           | grep '"ApplicationName": "${{ inputs.application_name }}"' \
           || aws elasticbeanstalk create-environment \
           --application-name ${{ inputs.application_name}}
-          --environment-name ${{ environment_name }}
+          --environment-name ${{ inputs.environment_name }}
           --solution-stack-name ${{ inputs.solution_stack_name }}
 
       - name: Beanstalk update-environment
