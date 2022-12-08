@@ -86,13 +86,13 @@ jobs:
       #   run: git remote add codecommit-origin https://git-codecommit.${{ inputs.region }}.amazonaws.com/v1/repos/${{ inputs.application_name }}
       # - name: push codecommit push
       #   run: git push codecommit-origin
-
       - name: Beanstalk create-application-version
-        run:
+        run: |
           aws elasticbeanstalk create-application-version \
-          --application-name ${{ inputs.application_name }} \
-          # --version-label "ver-${{ github.sha }}" \
-          # --description "commit-sha-${{ github.sha }}"
+          --application-name ${{ inputs.application_name }}
+
+        # --version-label "ver-${{ github.sha }}" \
+        # --description "commit-sha-${{ github.sha }}"
 
       # - name: Beanstalk update-environment
       #   run: aws elasticbeanstalk update-environment \
