@@ -72,8 +72,8 @@ jobs:
 
       # --platform ${{ inputs.platform }}
 
-      # - name: Beanstalk create-application
-      #   run: aws elasticbeanstalk create-application --application-name ${{ inputs.application_name }}
+      - name: Beanstalk create-application
+        run: aws elasticbeanstalk create-application --application-name ${{ inputs.application_name }}
 
       # - name: Beanstalk create-application-version
       #   run: aws elasticbeanstalk create-application-version \
@@ -100,18 +100,18 @@ jobs:
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
 
-      - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v21
-        with:
-          #TODO: where does this access token come from?
-          aws_session_token: ${{ env.AWS_SESSION_TOKEN }}
-          aws_access_key: ${{ env.AWS_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+      # - name: Deploy to EB
+      #   uses: einaregilsson/beanstalk-deploy@v21
+      #   with:
+      #     #TODO: where does this access token come from?
+      #     aws_session_token: ${{ env.AWS_SESSION_TOKEN }}
+      #     aws_access_key: ${{ env.AWS_ACCESS_KEY_ID }}
+      #     aws_secret_key: ${{ env.AWS_SECRET_ACCESS_KEY }}
 
-          application_name: ${{ inputs.application_name }}
-          environment_name: ${{ inputs.environment }}
-          # application_name: MyApplicationName
-          # environment_name: MyApplication-Environment
-          version_label: 12345
-          region: ${{ inputs.region }}
-          deployment_package: deploy.zip
+      #     application_name: ${{ inputs.application_name }}
+      #     environment_name: ${{ inputs.environment }}
+      #     # application_name: MyApplicationName
+      #     # environment_name: MyApplication-Environment
+      #     version_label: 12345
+      #     region: ${{ inputs.region }}
+      #     deployment_package: deploy.zip
