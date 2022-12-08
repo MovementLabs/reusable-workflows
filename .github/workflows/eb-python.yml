@@ -40,8 +40,10 @@ jobs:
       #     key: ${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ hashFiles('requirements.txt') }}
 
       - name: Install requirements
+        run: pip install -r requirements.txt
+
+      - name: Install EB CLI
         run: >
-          pip install -r requirements.txt;
           python -m pip install --user virtualenv;
           echo 'export PATH="/home/runner/.ebcli-virtual-env/executables:$PATH"' >> ~/.bash_profile && source ~/.bash_profile;
           git clone https://github.com/aws/aws-elastic-beanstalk-cli-setup.git;
@@ -72,7 +74,7 @@ jobs:
       #     || aws elasticbeanstalk create-application \
       #     --application-name ${{ inputs.application_name }}
 
-      - name: eb install
+      - name: eb init
         run: |
           eb init ${{ inputs.application_name }} \ 
           --region ${{ inputs.region }} \
