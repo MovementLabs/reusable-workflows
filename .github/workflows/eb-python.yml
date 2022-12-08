@@ -100,7 +100,8 @@ jobs:
           --description "commit-sha-${{ github.sha }}"
 
       - name: Beanstalk update-environment
-        run: aws elasticbeanstalk update-environment \
+        run: |
+          aws elasticbeanstalk update-environment \
           --environment-name ${{ inputs.environment_name }} \
           --version-label "ver-${{ github.sha }}"
 
