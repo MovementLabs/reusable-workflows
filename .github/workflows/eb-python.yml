@@ -93,10 +93,10 @@ jobs:
           --version-label "ver-${{ github.sha }}" \
           --description "commit-sha-${{ github.sha }}"
 
-      # - name: Beanstalk update-environment
-      #   run: aws elasticbeanstalk update-environment \
-      #     --environment-name ${{ inputs.environment }} \
-      #     --version-label "ver-${{ github.sha }}"
+      - name: Beanstalk update-environment
+        run: aws elasticbeanstalk update-environment \
+          --environment-name ${{ inputs.environment }} \
+          --version-label "ver-${{ github.sha }}"
 
       # - name: Generate deployment package
       #   run: zip -r deploy.zip . -x '*.git*'
