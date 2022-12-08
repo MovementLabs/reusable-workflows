@@ -42,13 +42,6 @@ jobs:
       - name: Install requirements
         run: pip install -r requirements.txt
 
-      - name: Install EB CLI
-        run: >
-          python -m pip install --user virtualenv;
-          echo 'export PATH="/home/runner/.ebcli-virtual-env/executables:$PATH"' >> ~/.bash_profile && source ~/.bash_profile;
-          git clone https://github.com/aws/aws-elastic-beanstalk-cli-setup.git;
-          python ./aws-elastic-beanstalk-cli-setup/scripts/ebcli_installer.py;
-
     # Linting, testing, etc. would go below this...
   deploy:
     name: Deploy to AWS Elastic Beanstalk
@@ -60,6 +53,13 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
+
+      - name: Install EB CLI
+        run: >
+          python -m pip install --user virtualenv;
+          echo 'export PATH="/home/runner/.ebcli-virtual-env/executables:$PATH"' >> ~/.bash_profile && source ~/.bash_profile;
+          git clone https://github.com/aws/aws-elastic-beanstalk-cli-setup.git;
+          python ./aws-elastic-beanstalk-cli-setup/scripts/ebcli_installer.py;
 
       - name: Configure AWS credentials from Test account
         uses: aws-actions/configure-aws-credentials@v1-node16
