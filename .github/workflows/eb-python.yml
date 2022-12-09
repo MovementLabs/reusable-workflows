@@ -75,11 +75,17 @@ jobs:
       #     || aws elasticbeanstalk create-application \
       #     --application-name ${{ inputs.application_name }}
 
-      # - name: eb init
-      #   run: |
-      #     eb init ${{ inputs.application_name }} \
-      #     --region ${{ inputs.region }} \
-      #     --platform ${{ inputs.platform }}
+      - name: eb init
+        run: |
+          eb init ${{ inputs.application_name }} \
+          --region ${{ inputs.region }} \
+          --platform ${{ inputs.platform }}
+
+      - name: eb create
+        run: |
+          eb create ${{ inputs.environment_name }} \
+          --region ${{ inputs.region }} \
+          --platform ${{ inputs.platform }}
 
       # --platform ${{ inputs.platform }}
 
@@ -94,26 +100,36 @@ jobs:
       # - name: push codecommit push
       #   run: git push codecommit-origin
       # safely create (check if exists) application version
-      - name: Beanstalk create-application-version
-        run: |
-          aws elasticbeanstalk describe-application-versions \
-          --version-label "ver-${{ github.sha }}" \
-          | grep '"ApplicationName": "${{ inputs.application_name }}"' \
-          || aws elasticbeanstalk create-application-version \
-          --application-name ${{ inputs.application_name }} \
-          --version-label "ver-${{ github.sha }}" \
-          --description "commit-sha-${{ github.sha }}"
+      # - name: Beanstalk create-application-version
+      #   run: |
+      #     aws elasticbeanstalk describe-application-versions \
+      #     --version-label "ver-${{ github.sha }}" \
+      #     | grep '"ApplicationName": "${{ inputs.application_name }}"' \
+      #     || aws elasticbeanstalk create-application-version \
+      #     --application-name ${{ inputs.application_name }} \
+      #     --version-label "ver-${{ github.sha }}" \
+      #     --description "commit-sha-${{ github.sha }}"
 
-      # safe create (check if exists) environment
-      - name: Beanstalk create-environment
-        run: |
-          aws elasticbeanstalk describe-environments \
-          --application-name ${{ inputs.application_name}} \
-          | grep '"ApplicationName": "${{ inputs.application_name }}"' \
-          || aws elasticbeanstalk create-environment \
-          --application-name ${{ inputs.application_name}} \
-          --environment-name ${{ inputs.environment_name }} \
-          --solution-stack-name "${{ inputs.solution_stack_name }}"
+      # - name: Beanstalk create-environment
+      #   run: |
+      #     aws elasticbeanstalk describe-environments \
+      #     --application-name ${{ inputs.application_name}} \
+      #     | grep '"ApplicationName": "${{ inputs.application_name }}"' \
+      #     || aws elasticbeanstalk create-environment \
+      #     --application-name ${{ inputs.application_name}} \
+      #     --environment-name ${{ inputs.environment_name }} \
+      #     --solution-stack-name "${{ inputs.solution_stack_name }}"
+
+      # # safe create (check if exists) environment
+      # - name: Beanstalk create-environment
+      #   run: |
+      #     aws elasticbeanstalk describe-environments \
+      #     --application-name ${{ inputs.application_name}} \
+      #     | grep '"ApplicationName": "${{ inputs.application_name }}"' \
+      #     || aws elasticbeanstalk create-environment \
+      #     --application-name ${{ inputs.application_name}} \
+      #     --environment-name ${{ inputs.environment_name }} \
+      #     --solution-stack-name "${{ inputs.solution_stack_name }}"
 
       # - name: Beanstalk update-environment
       #   run: |
