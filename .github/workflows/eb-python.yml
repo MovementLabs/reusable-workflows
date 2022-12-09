@@ -17,6 +17,9 @@ on:
         #TODO: add this to frontend
         # required: true
         type: string
+      platform:
+        default: python
+        type: string
       #TODO: what are the type options here?
       # version_label:
       #   required: true
