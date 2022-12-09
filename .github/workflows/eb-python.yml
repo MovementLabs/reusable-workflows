@@ -57,10 +57,10 @@ jobs:
       - name: Install EB CLI
         run: >
           python -m pip install --user virtualenv;
-          export PATH="/home/runner/.ebcli-virtual-env/executables:$PATH
+          export PATH="/home/runner/.ebcli-virtual-env/executables:$PATH";
           git clone https://github.com/aws/aws-elastic-beanstalk-cli-setup.git;
           python ./aws-elastic-beanstalk-cli-setup/scripts/ebcli_installer.py;
-          eb init
+          eb init;
 
       - name: Configure AWS credentials from Test account
         uses: aws-actions/configure-aws-credentials@v1-node16
