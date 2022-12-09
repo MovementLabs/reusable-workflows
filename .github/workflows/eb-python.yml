@@ -70,7 +70,7 @@ jobs:
       - name: eb init
         uses: hmanzur/actions-aws-eb@v1.0.0
         with:
-          command: "create ${{ inputs.environment_name }}"
+          command: "init ${{ inputs.environment_name }}"
         env:
           AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
