@@ -18,7 +18,7 @@ on:
         # required: true
         type: string
       platform:
-        default: python
+        default: python3.8
         type: string
       #TODO: what are the type options here?
       # version_label:
@@ -86,7 +86,7 @@ jobs:
       - name: eb describe-environment (aws)
         run: |
           aws elasticbeanstalk describe-environments \
-          --application-name ${{ inputs.application_name}} \
+          --environment-name ${{ inputs.environment_name }} \
           | grep '"ApplicationName": "${{ inputs.application_name }}"';
 
         # echo "{EB_DESCRIBE_ENV}={$?}" >> $GITHUB_OUTPUT
