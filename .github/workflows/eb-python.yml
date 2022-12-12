@@ -18,7 +18,7 @@ on:
         # required: true
         type: string
       platform:
-        default: python3.8
+        default: python-3.8 # eb platform list --region us-east-2
         type: string
       #TODO: what are the type options here?
       # version_label:
