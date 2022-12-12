@@ -70,7 +70,8 @@ jobs:
       - name: Configure AWS credentials from Test account
         uses: aws-actions/configure-aws-credentials@v1-node16
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE }}
+          role-to-assume: arn:aws:iam::364804350459:role/github-actions
+          # role-to-assume: ${{ secrets.AWS_ROLE }}
           aws-region: ${{ inputs.region }}
 
       - name: eb init
