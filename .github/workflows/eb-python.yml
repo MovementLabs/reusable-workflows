@@ -75,6 +75,11 @@ jobs:
 
         # echo "{EB_DESCRIBE_ENV}={$?}" >> $GITHUB_OUTPUT
 
+      - name: eb environment name
+        run: |
+          ENV_NAME=${{inputs.environment_name}}-${{inputs.platform}}
+          echo "ENV_NAME=${ENV_NAME//./-}" >> $GITHUB_ENV
+
       - name: eb init
         uses: hmanzur/actions-aws-eb@v1.0.0
         with:
@@ -87,14 +92,14 @@ jobs:
       - name: eb describe-environment (aws)
         run: |
           aws elasticbeanstalk describe-environments \
-          --environment-name ${{ inputs.environment_name }}-${{ inputs.platform }} \
+          --environment-name ${{env.ENV_NAME }}\
           | grep '"ApplicationName": "${{ inputs.application_name }}"';
 
       - name: eb create environment
         uses: hmanzur/actions-aws-eb@v1.0.0
         if: ${{ failure() }} # previous step failed
         with:
-          command: "create ${{ inputs.environment_name }}-${{ inputs.platform }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}"
+          command: "create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}"
         env:
           AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
@@ -102,7 +107,7 @@ jobs:
       - name: eb deploy
         uses: hmanzur/actions-aws-eb@v1.0.0
         with:
-          command: "deploy ${{ inputs.environment_name }} --region ${{ inputs.region }} --message ${{ github.ref }}"
+          command: "deploy ${{ env.ENV_NAME }} --region ${{ inputs.region }} --message ${{ github.ref }}"
         env:
           AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
