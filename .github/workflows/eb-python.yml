@@ -82,8 +82,17 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
           # AWS_DEFAULT_REGION: ${{ inputs.region }}
 
+      - name: eb describe-environment (aws)
+        run: |
+          aws elasticbeanstalk describe-environments \
+          --application-name ${{ inputs.application_name}} \
+          | grep '"ApplicationName": "${{ inputs.application_name }}"';
+
+        # echo "{EB_DESCRIBE_ENV}={$?}" >> $GITHUB_OUTPUT
+
       - name: eb create environment
         uses: hmanzur/actions-aws-eb@v1.0.0
+        if: ${{ failure() }} # previous step failed
         with:
           command: "create ${{ inputs.environment_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}"
         env:
