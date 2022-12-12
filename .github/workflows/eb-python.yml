@@ -93,7 +93,7 @@ jobs:
         run: |
           aws elasticbeanstalk describe-environments \
           --environment-name ${{env.ENV_NAME }}\
-          | grep '"ApplicationName": "${{ inputs.application_name }}"';
+          | grep '"EnvironmentName": "${{ env.ENV_NAME }}"';
 
       - name: eb create environment
         uses: hmanzur/actions-aws-eb@v1.0.0
