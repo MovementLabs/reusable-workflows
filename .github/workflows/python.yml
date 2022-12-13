@@ -56,6 +56,13 @@ jobs:
           role-to-assume: arn:aws:iam::364804350459:role/github-actions
           aws-region: ${{ inputs.region }}
 
+      - name: Cache Docker images.
+        uses: ScribeMD/docker-cache@0.2.6
+        with:
+          key: docker-${{ runner.os }}
+          #TODO: add hashFiles if necessary?
+          # key: docker-${{ runner.os }}-${{ hashFiles(...) }}
+
       - name: eb environment name
         run: |
           ENV_NAME=${{inputs.environment_name}}-${{inputs.platform}}
