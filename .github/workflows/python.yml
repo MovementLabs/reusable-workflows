@@ -79,14 +79,14 @@ jobs:
         id: describe
         run: |
           ls; \
-          echo "describe=$?" >> $GITHUB_OUTPUT;
+          echo "describe=test" >> $GITHUB_OUTPUT;
         # run: >
         #   aws elasticbeanstalk describe-environments \
         #   --environment-name ${{env.ENV_NAME }}\
         #   | grep '"EnvironmentName": "${{ env.ENV_NAME }}"');
         #   echo "DESCRIBE=$?" >> $GITHUB_OUTPUT;
 
-      - run: echo ${{ steps.output.describe.DESCRIBE}}
+      - run: echo ${{ steps.describe.output.DESCRIBE }}
 
       # - name: eb create environment
       #   uses: hmanzur/actions-aws-eb@v1.0.0
