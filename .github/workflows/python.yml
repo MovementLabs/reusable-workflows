@@ -77,11 +77,11 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
 
       - name: eb describe-environment (aws)
-        continue-on-error: true
         run: |
-          aws elasticbeanstalk describe-environments \
+          DESCRIBE=$(aws elasticbeanstalk describe-environments \
           --environment-name ${{env.ENV_NAME }}\
-          | grep '"EnvironmentName": "${{ env.ENV_NAME }}"';
+          | grep '"EnvironmentName": "${{ env.ENV_NAME }}"');
+          echo "DESCRIBE=$DESCRIBE" >> $GITHUB_OUTPUT
 
       - name: eb create environment
         uses: hmanzur/actions-aws-eb@v1.0.0
