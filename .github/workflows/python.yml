@@ -82,7 +82,7 @@ jobs:
           aws elasticbeanstalk describe-environments \
           --environment-name ${{env.ENV_NAME }}\
           | grep '"EnvironmentName": "${{ env.ENV_NAME }}"'; \
-          echo "describe=$?" >> $GITHUB_ENV
+          echo "describe=$?" >> $GITHUB_OUTPUT
 
       - name: eb create environment
         uses: hmanzur/actions-aws-eb@v1.0.0
