@@ -1,32 +1,25 @@
 on:
   workflow_call:
-# inputs:
-# application_name:
-#   required: true
-#   type: string
-# solution_stack_name:
-#   description: aws list-available-solution-stacks
-#   default: 64bit Amazon Linux 2 v3.4.2 running Python 3.8
-#   type: string
-# region:
-#   description: AWS region to deploy to
-#   default: us-east-2
-#   type: string
-# environment_name:
-#   default: staging
-#   #TODO: add this to frontend
-#   # required: true
-#   type: string
-# platform:
-#   default: python-3.8 # eb platform list --region us-east-2
-#   type: string
-#TODO: what are the type options here?
-# version_label:
-#   required: true
-# type: number
-# secrets:
-#   envPAT:
-#     required: true
+    inputs:
+      application_name:
+        required: true
+        type: string
+      solution_stack_name:
+        description: aws list-available-solution-stacks
+        default: 64bit Amazon Linux 2 v3.4.2 running Python 3.8
+        type: string
+      region:
+        description: AWS region to deploy to
+        default: us-east-2
+        type: string
+      environment_name:
+        default: staging
+        #TODO: add this to frontend
+        # required: true
+        type: string
+      platform:
+        default: python-3.8 # eb platform list --region us-east-2
+        type: string
 jobs:
   build:
     name: Python install and build
@@ -44,6 +37,60 @@ jobs:
 
       - name: Install requirements
         run: pip install -r requirements.txt
+
+  deploy:
+    name: Deploy to AWS Elastic Beanstalk
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read
+    env:
+      AWS_DEFAULT_REGION: ${{ inputs.region }}
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials from Test account
+        uses: aws-actions/configure-aws-credentials@v1-node16
+        with:
+          role-to-assume: arn:aws:iam::364804350459:role/github-actions
+          aws-region: ${{ inputs.region }}
+
+      - name: eb environment name
+        run: |
+          ENV_NAME=${{inputs.application_name}}-${{inputs.environment_name}}-${{inputs.platform}}
+          echo "ENV_NAME=${ENV_NAME//./-}" >> $GITHUB_ENV
+
+      - name: eb init
+        uses: hmanzur/actions-aws-eb@v1.0.0
+        with:
+          command: "init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+
+      - name: eb describe-environment (aws)
+        run: |
+          aws elasticbeanstalk describe-environments \
+          --environment-name ${{env.ENV_NAME }}\
+          | grep '"EnvironmentName": "${{ env.ENV_NAME }}"';
+
+      - name: eb create environment
+        uses: hmanzur/actions-aws-eb@v1.0.0
+        if: ${{ failure() }} # previous step failed
+        with:
+          command: "create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+
+      - name: eb deploy
+        uses: hmanzur/actions-aws-eb@v1.0.0
+        with:
+          command: "deploy ${{ env.ENV_NAME }} --region ${{ inputs.region }} --message ${{ github.ref }}"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
 
     # Linting, testing, etc. would go below this...
   # deploy:
