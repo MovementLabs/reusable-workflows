@@ -65,7 +65,7 @@ jobs:
 
       - name: eb environment name
         run: |
-          ENV_NAME=${{inputs.environment_name}}-${{inputs.platform}}-test2
+          ENV_NAME=${{inputs.environment_name}}-${{inputs.platform}}-test3
           echo "ENV_NAME=${ENV_NAME//./-}" >> $GITHUB_ENV
 
       - name: eb init
@@ -89,7 +89,7 @@ jobs:
         # if: ${{ failure() }} # previous step failed
         if: ${{ steps.id-describe.outputs.describe == 1}}
         with:
-          command: "create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}"
+          command: "create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }} --single"
         env:
           AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
@@ -97,7 +97,7 @@ jobs:
       - name: eb deploy
         uses: hmanzur/actions-aws-eb@v1.0.0
         with:
-          command: "deploy ${{ env.ENV_NAME }} --region ${{ inputs.region }} --message ${{ github.ref }} --single"
+          command: "deploy ${{ env.ENV_NAME }} --region ${{ inputs.region }} --message ${{ github.ref }}"
         env:
           AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
