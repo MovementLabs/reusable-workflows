@@ -58,7 +58,7 @@ jobs:
 
       - name: eb environment name
         run: |
-          ENV_NAME=${{inputs.application_name}}-${{inputs.environment_name}}-${{inputs.platform}}
+          ENV_NAME=${{inputs.environment_name}}-${{inputs.platform}}
           echo "ENV_NAME=${ENV_NAME//./-}" >> $GITHUB_ENV
 
       - name: eb init
