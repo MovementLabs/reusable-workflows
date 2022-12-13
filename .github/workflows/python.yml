@@ -73,9 +73,8 @@ jobs:
       #   with:
       #     command: "init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}"
       #   env:
-          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
-
+      # AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+      # AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
       - name: eb describe-environment (aws)
         id: describe
         run: echo "action_state=yellow" >> $GITHUB_ENV
