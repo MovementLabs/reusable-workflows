@@ -56,49 +56,52 @@ jobs:
           role-to-assume: arn:aws:iam::364804350459:role/github-actions
           aws-region: ${{ inputs.region }}
 
-      - name: Cache Docker images.
-        uses: ScribeMD/docker-cache@0.2.6
-        with:
-          key: docker-${{ runner.os }}
-          #TODO: add hashFiles if necessary?
-          # key: docker-${{ runner.os }}-${{ hashFiles(...) }}
+      # - name: Cache Docker images.
+      #   uses: ScribeMD/docker-cache@0.2.6
+      #   with:
+      #     key: docker-${{ runner.os }}
+      #     #TODO: add hashFiles if necessary?
+      #     # key: docker-${{ runner.os }}-${{ hashFiles(...) }}
 
       - name: eb environment name
         run: |
           ENV_NAME=${{inputs.environment_name}}-${{inputs.platform}}-test3
           echo "ENV_NAME=${ENV_NAME//./-}" >> $GITHUB_ENV
 
-      - name: eb init
-        uses: hmanzur/actions-aws-eb@v1.0.0
-        with:
-          command: "init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}"
-        env:
+      # - name: eb init
+      #   uses: hmanzur/actions-aws-eb@v1.0.0
+      #   with:
+      #     command: "init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}"
+      #   env:
           AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
 
       - name: eb describe-environment (aws)
-        run: |
-          DESCRIBE=$(aws elasticbeanstalk describe-environments \
-          --environment-name ${{env.ENV_NAME }}\
-          | grep '"EnvironmentName": "${{ env.ENV_NAME }}"');
-          echo "DESCRIBE=$DESCRIBE" >> $GITHUB_OUTPUT
+        id: describe
+        run: echo "action_state=yellow" >> $GITHUB_ENV
+        # run: >
+        #   aws elasticbeanstalk describe-environments \
+        #   --environment-name ${{env.ENV_NAME }}\
+        #   | grep '"EnvironmentName": "${{ env.ENV_NAME }}"');
+        #   echo "DESCRIBE=$?" >> $GITHUB_OUTPUT;
 
-      - name: eb create environment
-        uses: hmanzur/actions-aws-eb@v1.0.0
-        if: ${{ failure() }} # previous step failed
-        with:
-          command: "create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }} --single"
-        env:
-          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+      # - name: eb create environment
+      #   uses: hmanzur/actions-aws-eb@v1.0.0
+      #   # if: ${{ failure() }} # previous step failed
+      #   if: ${{ steps.output.describe.DESCRIBE == 1}}
+      #   with:
+      #     command: "create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }} --single"
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
 
-      - name: eb deploy
-        uses: hmanzur/actions-aws-eb@v1.0.0
-        with:
-          command: "deploy ${{ env.ENV_NAME }} --region ${{ inputs.region }} --message ${{ github.ref }}"
-        env:
-          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+      # - name: eb deploy
+      #   uses: hmanzur/actions-aws-eb@v1.0.0
+      #   with:
+      #     command: "deploy ${{ env.ENV_NAME }} --region ${{ inputs.region }} --message ${{ github.ref }}"
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
 
     # Linting, testing, etc. would go below this...
   # deploy:
