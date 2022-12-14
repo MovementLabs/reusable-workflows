@@ -68,13 +68,14 @@ jobs:
           ENV_NAME=${{inputs.environment_name}}-${{inputs.platform}}-test3
           echo "ENV_NAME=${ENV_NAME//./-}" >> $GITHUB_ENV
 
-      # - name: eb init
-      #   uses: hmanzur/actions-aws-eb@v1.0.0
-      #   with:
-      #     command: "init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}"
-      #   env:
-      # AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-      # AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+      - name: eb init
+        uses: hmanzur/actions-aws-eb@v1.0.0
+        with:
+          command: "init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+
       - name: eb describe-environment (aws)
         id: describe
         run: |
