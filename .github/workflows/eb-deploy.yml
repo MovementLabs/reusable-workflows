@@ -58,9 +58,9 @@ jobs:
       - name: eb describe-environment (aws)
         id: describe
         run: |
-          echo "describe=$(aws elasticbeanstalk describe-environments \
+          echo `describe=$(aws elasticbeanstalk describe-environments \
           --environment-name ${{env.ENV_NAME }} \
-          | grep '"EnvironmentName": "${{ env.ENV_NAME }}"'"
+          | grep '"EnvironmentName": "${{ env.ENV_NAME }}"'`
 
         # echo "describe=$?" >> $GITHUB_OUTPUT;
 
