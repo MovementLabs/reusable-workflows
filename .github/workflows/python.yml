@@ -75,6 +75,9 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
 
+        # search for environment name (matches terminated environments until they're fully removed after ~1hr)
+        # if the env already exists, then it will output 0 for success or 1 for failure
+        # on failure - run the create env step
       - name: eb describe-environment (aws)
         id: describe
         run: |
@@ -100,13 +103,13 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
 
-      # - name: eb deploy
-      #   uses: hmanzur/actions-aws-eb@v1.0.0
-      #   with:
-      #     command: "deploy ${{ env.ENV_NAME }} --region ${{ inputs.region }} --message ${{ github.ref }}"
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+      - name: eb deploy
+        uses: hmanzur/actions-aws-eb@v1.0.0
+        with:
+          command: "deploy ${{ env.ENV_NAME }} --region ${{ inputs.region }} --message ${{ github.ref }}"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
 
     # Linting, testing, etc. would go below this...
   # deploy:
