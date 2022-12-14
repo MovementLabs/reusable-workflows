@@ -64,6 +64,8 @@ jobs:
           grep '"EnvironmentName": "${{ env.ENV_NAME }}"'); \
           echo "describe=$?" >> $GITHUB_OUTPUT;
 
+      - run: echo ${{ steps.describe.output.describe}}
+
       # - name: eb create environment
       #   if: ${{ steps.describe.outputs.describe == 1 }}
       #   uses: hmanzur/actions-aws-eb@v1.0.0
