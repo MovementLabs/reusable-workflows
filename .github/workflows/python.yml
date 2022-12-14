@@ -39,77 +39,9 @@ jobs:
         run: pip install -r requirements.txt
 
   deploy:
-    name: Deploy to AWS Elastic Beanstalk
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: read
-    env:
-      AWS_DEFAULT_REGION: ${{ inputs.region }}
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v3
-
-      - name: Configure AWS credentials from Test account
-        uses: aws-actions/configure-aws-credentials@v1-node16
-        with:
-          role-to-assume: arn:aws:iam::364804350459:role/github-actions
-          aws-region: ${{ inputs.region }}
-
-      - name: Cache Docker images.
-        uses: ScribeMD/docker-cache@0.2.6
-        with:
-          #TODO: change this if different aws-eb docker version used
-          key: docker-${{ runner.os }}-actions-aws-eb@v1.0.0
-
-      - name: eb environment name
-        run: |
-          ENV_NAME=${{inputs.environment_name}}-${{inputs.platform}}
-          echo "ENV_NAME=${ENV_NAME//./-}" >> $GITHUB_ENV
-
-      - name: eb init
-        uses: hmanzur/actions-aws-eb@v1.0.0
-        with:
-          command: "init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}"
-        env:
-          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
-
-        # search for environment name (matches terminated environments until they're fully removed after ~1hr)
-        # if the env already exists, then it will output 0 for success or 1 for failure
-        # on failure - run the create env step
-      - name: eb describe-environment (aws)
-        id: describe
-        run: |
-          DESCRIBE=$(aws elasticbeanstalk describe-environments \
-          --environment-name ${{env.ENV_NAME }}); \
-          echo $DESCRIBE | grep '"EnvironmentName": "${{ env.ENV_NAME }}"'; \
-          echo "describe=$?" >> $GITHUB_OUTPUT;
-
-        # run: >
-        #   aws elasticbeanstalk describe-environments \
-        #   --environment-name ${{env.ENV_NAME }}\
-        #   | grep '"EnvironmentName": "${{ env.ENV_NAME }}"');
-        #   echo "DESCRIBE=$?" >> $GITHUB_OUTPUT;
-
-      # - run: echo ${{ steps.describe.outputs.describe }}
-      - name: eb create environment
-        if: ${{ steps.describe.outputs.describe == 1 }}
-        uses: hmanzur/actions-aws-eb@v1.0.0
-        #   # if: ${{ failure() }} # previous step failed
-        with:
-          command: "create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }} --single"
-        env:
-          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
-
-      - name: eb deploy
-        uses: hmanzur/actions-aws-eb@v1.0.0
-        with:
-          command: "deploy ${{ env.ENV_NAME }} --region ${{ inputs.region }} --message ${{ github.ref }}"
-        env:
-          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+    uses: MovementLabs/reusable-workflows/.github/workflows/eb-deploy.yml@main
+    with:
+      application_name: ${{ inputs.application_name }}
 
     # Linting, testing, etc. would go below this...
   # deploy:
