@@ -1,0 +1,15 @@
+on:
+  workflow_call:
+jobs:
+  build:
+    name: Node install and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+
+      - run: npm i
+      - run: npm run test
+      - run: npm run build
