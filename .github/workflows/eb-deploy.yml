@@ -62,7 +62,7 @@ jobs:
           --environment-name ${{env.ENV_NAME }}); \
           FIND=$(echo $ENVS | grep '"EnvironmentName": "${{ env.ENV_NAME }}"'); \
           echo $ENVS; \
-          echo $FIND; \
+          echo $FIND;
         # echo "describe=$?" >> $GITHUB_OUTPUT;
 
       - run: echo ${{ steps.describe.output.describe}}
