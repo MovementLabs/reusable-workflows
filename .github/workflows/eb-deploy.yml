@@ -52,7 +52,6 @@ jobs:
       #   env:
       #     AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
       #     AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
-
       # search for environment name (matches terminated environments until they're fully removed after ~1hr)
       # if the env already exists, then it will output 0 for success or 1 for failure
       # on failure - run the create env step
@@ -62,7 +61,9 @@ jobs:
           $(aws elasticbeanstalk describe-environments \
           --environment-name ${{env.ENV_NAME }} \
           | grep '"EnvironmentName": "${{ env.ENV_NAME }}"' && exit $?); \
-          echo "describe=$?" >> $GITHUB_OUTPUT;
+          echo "describe=test"
+
+        # echo "describe=$?" >> $GITHUB_OUTPUT;
 
       - run: echo ${{ steps.describe.output.describe}}
 
