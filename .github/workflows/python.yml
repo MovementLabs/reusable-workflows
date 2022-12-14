@@ -88,17 +88,16 @@ jobs:
         #   | grep '"EnvironmentName": "${{ env.ENV_NAME }}"');
         #   echo "DESCRIBE=$?" >> $GITHUB_OUTPUT;
 
-      - run: echo ${{ steps.describe.outputs.describe }}
-
-      # - name: eb create environment
-      #   uses: hmanzur/actions-aws-eb@v1.0.0
-      #   # if: ${{ failure() }} # previous step failed
-      #   if: ${{ steps.output.describe.DESCRIBE == 1}}
-      #   with:
-      #     command: "create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }} --single"
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+      # - run: echo ${{ steps.describe.outputs.describe }}
+      - name: eb create environment
+        if: ${{ steps.describe.outputs.describe == 1 }}
+        uses: hmanzur/actions-aws-eb@v1.0.0
+        #   # if: ${{ failure() }} # previous step failed
+        with:
+          command: "create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }} --single"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
 
       # - name: eb deploy
       #   uses: hmanzur/actions-aws-eb@v1.0.0
