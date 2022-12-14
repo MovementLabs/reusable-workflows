@@ -62,7 +62,7 @@ jobs:
           DESCRIBE=$(aws elasticbeanstalk describe-environments \
           --environment-name ${{env.ENV_NAME }} \
           grep '"EnvironmentName": "${{ env.ENV_NAME }}"'); \
-          echo "describe=$?" >> $GITHUB_OUTPUT;
+          echo "describe=$DESCRIBE" >> $GITHUB_OUTPUT;
 
       - run: echo ${{ steps.describe.output.describe}}
 
