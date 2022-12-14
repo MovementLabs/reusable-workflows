@@ -58,16 +58,15 @@ jobs:
       # ensure intermediate steps pass on failed grep: https://stackoverflow.com/questions/73066461/github-actions-why-an-intermediate-command-failure-in-shell-script-would-cause
       - name: eb describe-environment (aws)
         id: describe
-        run: echo "describe=test" >> $GITHUB_OUTPUT
-        # run: |
-        #   aws elasticbeanstalk describe-environments --environment-name ${{ env.ENV_NAME }} \
-        #   | grep '"EnvironmentName": "${{ env.ENV_NAME }}"' \
-        #   || echo "describe='test'" >> $GITHUB_OUTPUT \
-        #   && exit 0
+        run: |
+          aws elasticbeanstalk describe-environments --environment-name ${{ env.ENV_NAME }} \
+          | grep '"EnvironmentName": "${{ env.ENV_NAME }}"' \
+          || echo "describe='test'" >> $GITHUB_OUTPUT \
+          && exit 0
 
         # || echo "describe=$?" >> $GITHUB_OUTPUT
 
-      - run: echo ${{ steps.describe.output.describe}}
+      - run: echo ${{ steps.describe.outputs.describe}}
 
       # - name: eb create environment
       #   if: ${{ steps.describe.outputs.describe == 1 }}
