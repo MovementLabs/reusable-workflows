@@ -59,7 +59,7 @@ jobs:
       - name: eb describe-environment (aws)
         id: describe
         run: |
-          aws elasticbeanstalk describe-environments --environment-name ${{ env.ENV_NAME }} ) \
+          aws elasticbeanstalk describe-environments --environment-name ${{ env.ENV_NAME }} \
           | grep '"EnvironmentName": "${{ env.ENV_NAME }}"' \
           || exit 0
 
