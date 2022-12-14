@@ -58,7 +58,7 @@ jobs:
       - name: eb describe-environment (aws)
         id: describe
         run: |
-          ENVS=""; \
+          ENVS=$( aws elasticbeanstalk describe-environments --environment name test )"; \
           FIND=""; \
           echo $ENVS; \
           echo $FIND;
