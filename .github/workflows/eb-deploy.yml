@@ -40,12 +40,6 @@ jobs:
           role-to-assume: arn:aws:iam::364804350459:role/github-actions
           aws-region: ${{ inputs.region }}
 
-      - name: Cache Docker images.
-        uses: ScribeMD/docker-cache@0.2.6
-        with:
-          #TODO: change this if different aws-eb docker version used
-          key: docker-${{ runner.os }}-actions-aws-eb@v1.0.0
-
       - name: eb environment name
         run: |
           ENV_NAME=${{inputs.environment_name}}-${{inputs.platform}}
@@ -66,21 +60,13 @@ jobs:
         id: describe
         run: |
           DESCRIBE=$(aws elasticbeanstalk describe-environments \
-          --environment-name ${{env.ENV_NAME }}); \
-          echo $DESCRIBE | grep '"EnvironmentName": "${{ env.ENV_NAME }}"'; \
+          --environment-name ${{env.ENV_NAME }} \
+          grep '"EnvironmentName": "${{ env.ENV_NAME }}"'); \
           echo "describe=$?" >> $GITHUB_OUTPUT;
 
-        # run: >
-        #   aws elasticbeanstalk describe-environments \
-        #   --environment-name ${{env.ENV_NAME }}\
-        #   | grep '"EnvironmentName": "${{ env.ENV_NAME }}"');
-        #   echo "DESCRIBE=$?" >> $GITHUB_OUTPUT;
-
-      # - run: echo ${{ steps.describe.outputs.describe }}
       - name: eb create environment
         if: ${{ steps.describe.outputs.describe == 1 }}
         uses: hmanzur/actions-aws-eb@v1.0.0
-        #   # if: ${{ failure() }} # previous step failed
         with:
           command: "create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }} --single"
         env:
