@@ -64,23 +64,19 @@ jobs:
           || echo "describe=$?" >> $GITHUB_OUTPUT \
           && exit 0
 
-        # || echo "describe=$?" >> $GITHUB_OUTPUT
+      - name: eb create environment
+        if: ${{ steps.describe.outputs.describe == 1 }}
+        uses: hmanzur/actions-aws-eb@v1.0.0
+        with:
+          command: "create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }} --single"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
 
-      - run: echo ${{ steps.describe.outputs.describe}}
-
-      # - name: eb create environment
-      #   if: ${{ steps.describe.outputs.describe == 1 }}
-      #   uses: hmanzur/actions-aws-eb@v1.0.0
-      #   with:
-      #     command: "create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }} --single"
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
-
-      # - name: eb deploy
-      #   uses: hmanzur/actions-aws-eb@v1.0.0
-      #   with:
-      #     command: "deploy ${{ env.ENV_NAME }} --region ${{ inputs.region }} --message ${{ github.ref }}"
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+      - name: eb deploy
+        uses: hmanzur/actions-aws-eb@v1.0.0
+        with:
+          command: "deploy ${{ env.ENV_NAME }} --region ${{ inputs.region }} --message ${{ github.ref }}"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
