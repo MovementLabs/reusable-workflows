@@ -55,10 +55,11 @@ jobs:
       # search for environment name (matches terminated environments until they're fully removed after ~1hr)
       # if the env already exists, then it will output 0 for success or 1 for failure
       # on failure - run the create env step
+      # set -x to ensure intermediate steps pass on failed grep: https://stackoverflow.com/questions/73066461/github-actions-why-an-intermediate-command-failure-in-shell-script-would-cause
       - name: eb describe-environment (aws)
         id: describe
         run: |
-          set +x
+          set +x 
           ENVS=$(aws elasticbeanstalk describe-environments --environment-name ${{ env.ENV_NAME }} ); \
           FIND=$(echo $ENVS | grep '"EnvironmentName": "${{ env.ENV_NAME }}"'); \
           echo "describe=$FIND" >> $GITHUB_OUTPUT
