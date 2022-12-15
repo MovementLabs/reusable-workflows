@@ -10,7 +10,7 @@ on:
         type: string
       region:
         description: AWS region to deploy to
-        default: us-east-2
+        default: us-west-2
         type: string
       environment_name:
         default: dev
