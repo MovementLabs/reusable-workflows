@@ -29,6 +29,15 @@ jobs:
 
       - name: Setup Python
         uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+          cache: pip
+
+      - uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: |
+            ${{ secrets.MLABS_PYTHON_PKG_SSH }}
+            ${{ secrets.MLABS_LAMBDA_UTILS_SSH }}
 
       # - uses: actions/cache@v2
       #   with:
