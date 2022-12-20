@@ -20,6 +20,9 @@ on:
       platform:
         default: python-3.8 # eb platform list --region us-east-2
         type: string
+      tags:
+        default: dev
+        type: string
 
 jobs:
   deploy:
@@ -42,7 +45,7 @@ jobs:
 
       - name: eb environment name
         run: |
-          ENV_NAME=${{ inputs.application_name }}-${{inputs.environment_name}}-${{inputs.platform}}
+          ENV_NAME=${{ inputs.application_name }}-${{inputs.environment_name}}-${{inputs.platform}}-${{inputs.tags}}
           echo "ENV_NAME=${ENV_NAME//./-}" >> $GITHUB_ENV
 
       - name: eb init
