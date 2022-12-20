@@ -49,7 +49,7 @@ jobs:
 
   deploy:
     uses: MovementLabs/reusable-workflows/.github/workflows/eb-deploy.yml@main
-    # needs: build
+    needs: build
     with:
       application_name: ${{ inputs.application_name }}
 
