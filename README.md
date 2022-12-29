@@ -8,8 +8,8 @@
 
 ## Concepts
 
-AWS Elastic Beanstalk
-GitHub Actions
+- AWS Elastic Beanstalk
+- GitHub Actions
 
 ## Outputs
 
@@ -29,6 +29,16 @@ AWS Beanstalk environment
 You will see logs and errors in the GitHub Actions tab.
 
 [AWS Beanstalk console](https://console.aws.amazon.com/elasticbeanstalk/)
+
+Logs can be downloaded from the EB Web Portal for further analysis.
+
+Alternatively, you can ssh into the machine with `eb ssh`
+
+- must be in the project directory after `eb init`
+
+[Private Repo Access with SSH Keys](https://stackoverflow.com/questions/13476138/setting-up-private-github-access-with-aws-elastic-beanstalk-and-ruby-container)
+
+[Multiple deploy keys](https://docs.github.com/en/developers/overview/managing-deploy-keys#using-multiple-repositories-on-one-server)
 
 ## TODO:
 

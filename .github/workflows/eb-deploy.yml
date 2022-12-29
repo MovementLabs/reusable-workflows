@@ -6,7 +6,7 @@ on:
         type: string
       solution_stack_name:
         description: aws list-available-solution-stacks
-        default: 64bit Amazon Linux 2 v3.4.2 running Python 3.8
+        default: 64bit Amazon Linux 2 v3.4.3 running Python 3.8
         type: string
       region:
         description: AWS region to deploy to
