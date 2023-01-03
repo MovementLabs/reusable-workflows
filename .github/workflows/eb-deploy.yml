@@ -91,7 +91,7 @@ jobs:
 
       - name: eb create environment
         if: ${{ steps.describe.outputs.describe == 1 }}
-        run: eb create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }} --envvars DOPPLER_TOKEN=${{ secrets.DOPPLER_TOKEN_STAGE }} --verbose
+        run: eb create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }} --envvars DOPPLER_TOKEN=${{secrets.DOPPLER_TOKEN_STAGE}} --verbose
 
       - name: eb deploy
         run: eb deploy ${{ env.ENV_NAME }} --region ${{ inputs.region }} --message ${{ github.ref }} --process --verbose
