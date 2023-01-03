@@ -23,6 +23,8 @@ on:
       tags:
         default: dev
         type: string
+    secrets:
+      DOPPLER_TOKEN_STAGE: ${{ secrets.DOPPLER_TOKEN_STAGE}}
 
 jobs:
   deploy:
@@ -81,7 +83,7 @@ jobs:
         uses: hmanzur/actions-aws-eb@v1.0.0
         with:
           #TODO: setup PROD switch
-          command: "eb setenv DOPPLER_TOKEN=${{DOPPLER_TOKEN_STAGE}}"
+          command: "eb setenv DOPPLER_TOKEN=${{secrets.DOPPLER_TOKEN_STAGE}}"
 
       - name: eb deploy
         uses: hmanzur/actions-aws-eb@v1.0.0
