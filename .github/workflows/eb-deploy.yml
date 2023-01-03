@@ -24,7 +24,8 @@ on:
         default: dev
         type: string
     secrets:
-      DOPPLER_TOKEN_STAGE: ${{ secrets.DOPPLER_TOKEN_STAGE}}
+      DOPPLER_TOKEN_STAGE:
+        required: true
 
 jobs:
   deploy:
