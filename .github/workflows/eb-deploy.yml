@@ -78,8 +78,11 @@ jobs:
       #     && exit 0
 
       #TODO: setup PROD switch
-      - name: eb env
-        run: eb setenv DOPPLER_TOKEN=TEST
+      - name: setup env
+        # run: eb setenv DOPPLER_TOKEN=TEST
+        run: >
+          echo ${{ secrets.DOPPLER_TOKEN_STAGE }} >> &gt;&gt; .ebextensions/02-env-doppler.config;
+          cat .ebextensions/02-env-doppler.config;
 
       # - name: eb create environment
       #   if: ${{ steps.describe.outputs.describe == 1 }}
