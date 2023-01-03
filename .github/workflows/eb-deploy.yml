@@ -79,7 +79,7 @@ jobs:
 
       #TODO: setup PROD switch
       - name: eb env
-        run: eb setenv DOPPLER_TOKEN=${{ secrets.DOPPLER_TOKEN_STAGE }}
+        run: eb setenv DOPPLER_TOKEN=TEST
 
       # - name: eb create environment
       #   if: ${{ steps.describe.outputs.describe == 1 }}
