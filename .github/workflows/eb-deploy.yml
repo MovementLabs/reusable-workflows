@@ -40,17 +40,17 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      - run: |
-          cat << EOF > ./.ebextensions/02-env-doppler.config
-          option_settings:
-            "aws:elasticbeanstalk:application:environment":
-              HISTIGNORE: DOPPLER_TOKEN*
-              DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_STAGE }}
+      # - run: |
+      #     cat << EOF > ./.ebextensions/02-env-doppler.config
+      #     option_settings:
+      #       "aws:elasticbeanstalk:application:environment":
+      #         HISTIGNORE: DOPPLER_TOKEN*
+      #         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_STAGE }}
 
-          commands:
-            01-install-doppler:
-              command: (curl -Ls --tlsv1.2 --proto "=https" --retry 3 https://cli.doppler.com/install.sh || wget -t 3 -qO- https://cli.doppler.com/install.sh) | sudo sh
-          EOF
+      #     commands:
+      #       01-install-doppler:
+      #         command: (curl -Ls --tlsv1.2 --proto "=https" --retry 3 https://cli.doppler.com/install.sh || wget -t 3 -qO- https://cli.doppler.com/install.sh) | sudo sh
+      #     EOF
 
       - name: Setup Python
         uses: actions/setup-python@v4
