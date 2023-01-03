@@ -75,7 +75,7 @@ jobs:
         uses: hmanzur/actions-aws-eb@v1.0.0
         with:
           #TODO: setup PROD switch
-          command: "eb setenv DOPPLER_TOKEN=${{secrets.DOPPLER_TOKEN_STAGE}}"
+          command: "eb setenv DOPPLER_TOKEN=${{ secrets.DOPPLER_TOKEN_STAGE }}"
 
       - name: eb create environment
         if: ${{ steps.describe.outputs.describe == 1 }}
