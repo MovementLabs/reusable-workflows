@@ -89,7 +89,8 @@ jobs:
           || echo "describe=$?" >> $GITHUB_OUTPUT \
           && exit 0
 
-      # - run: cat .ebextensions/02-env-doppler.config;
+      - run: cat .ebextensions/02-env-doppler.config;
+
       - name: eb create environment
         if: ${{ steps.describe.outputs.describe == 1 }}
         run: eb create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }} --verbose
