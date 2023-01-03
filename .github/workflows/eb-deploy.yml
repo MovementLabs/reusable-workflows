@@ -45,7 +45,7 @@ jobs:
           option_settings:
             "aws:elasticbeanstalk:application:environment":
               HISTIGNORE: DOPPLER_TOKEN*
-              DOPPLER_TOKEN: $1
+              DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_STAGE }}
 
           commands:
             01-install-doppler:
