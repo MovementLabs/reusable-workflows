@@ -48,16 +48,25 @@ jobs:
       - name: install ebcli
         run: pip install awsebcli
 
-      # - name: Configure AWS credentials from Test account
-      #   uses: aws-actions/configure-aws-credentials@v1-node16
-      #   with:
-      #     role-to-assume: arn:aws:iam::364804350459:role/github-actions
-      #     aws-region: ${{ inputs.region }}
+      - name: Configure AWS credentials from Test account
+        uses: aws-actions/configure-aws-credentials@v1-node16
+        with:
+          role-to-assume: arn:aws:iam::364804350459:role/github-actions
+          aws-region: ${{ inputs.region }}
 
-      # - name: eb environment name
-      #   run: |
-      #     ENV_NAME=${{ inputs.application_name }}-${{inputs.environment_name}}-${{inputs.platform}}-${{inputs.tags}}
-      #     echo "ENV_NAME=${ENV_NAME//./-}" >> $GITHUB_ENV
+      - name: eb environment name
+        run: |
+          ENV_NAME=${{ inputs.application_name }}-${{inputs.environment_name}}-${{inputs.platform}}-${{inputs.tags}}
+          echo "ENV_NAME=${ENV_NAME//./-}" >> $GITHUB_ENV
+
+      - run: eb --version
+
+      # - name: eb init
+      #   uses: hmanzur/actions-aws-eb@v1.0.0
+      # run: eb init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
 
       # - name: eb init
       #   uses: hmanzur/actions-aws-eb@v1.0.0
