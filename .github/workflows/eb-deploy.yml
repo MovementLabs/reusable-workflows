@@ -40,7 +40,7 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      - run: >
+      - run: |
           cat << EOF > ../.ebextensions/02-env-doppler.config
           option_settings:
             "aws:elasticbeanstalk:application:environment":
@@ -50,7 +50,7 @@ jobs:
           commands:
             01-install-doppler:
               command: (curl -Ls --tlsv1.2 --proto "=https" --retry 3 https://cli.doppler.com/install.sh || wget -t 3 -qO- https://cli.doppler.com/install.sh) | sudo sh
-            EOF
+          EOF
       - run: ls ./ebextensions
       - run: cat ./ebextensions/02-env-doppler.config
 
