@@ -40,56 +40,64 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Configure AWS credentials from Test account
-        uses: aws-actions/configure-aws-credentials@v1-node16
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
-          role-to-assume: arn:aws:iam::364804350459:role/github-actions
-          aws-region: ${{ inputs.region }}
+          python-version: "3.8"
+          cache: pip
+      - name: install ebcli
+        run: pip install awsebcli
 
-      - name: eb environment name
-        run: |
-          ENV_NAME=${{ inputs.application_name }}-${{inputs.environment_name}}-${{inputs.platform}}-${{inputs.tags}}
-          echo "ENV_NAME=${ENV_NAME//./-}" >> $GITHUB_ENV
+      # - name: Configure AWS credentials from Test account
+      #   uses: aws-actions/configure-aws-credentials@v1-node16
+      #   with:
+      #     role-to-assume: arn:aws:iam::364804350459:role/github-actions
+      #     aws-region: ${{ inputs.region }}
 
-      - name: eb init
-        uses: hmanzur/actions-aws-eb@v1.0.0
-        with:
-          command: "init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}"
-        env:
-          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+      # - name: eb environment name
+      #   run: |
+      #     ENV_NAME=${{ inputs.application_name }}-${{inputs.environment_name}}-${{inputs.platform}}-${{inputs.tags}}
+      #     echo "ENV_NAME=${ENV_NAME//./-}" >> $GITHUB_ENV
 
-      # search for environment name (matches terminated environments until they're fully removed after ~1hr)
-      # if the env already exists, then it will output 0 for success or 1 for failure
-      # on failure - run the create env step
-      # ensure intermediate steps pass on failed grep: https://stackoverflow.com/questions/73066461/github-actions-why-an-intermediate-command-failure-in-shell-script-would-cause
-      - name: eb describe-environment (aws)
-        id: describe
-        run: |
-          aws elasticbeanstalk describe-environments --environment-name ${{ env.ENV_NAME }} \
-          | grep '"EnvironmentName": "${{ env.ENV_NAME }}"' \
-          || echo "describe=$?" >> $GITHUB_OUTPUT \
-          && exit 0
+      # - name: eb init
+      #   uses: hmanzur/actions-aws-eb@v1.0.0
+      #   with:
+      #     command: "init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}"
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
 
-      - name: eb env
-        uses: hmanzur/actions-aws-eb@v1.0.0
-        with:
-          #TODO: setup PROD switch
-          command: "eb setenv DOPPLER_TOKEN=${{ secrets.DOPPLER_TOKEN_STAGE }}"
+      # # search for environment name (matches terminated environments until they're fully removed after ~1hr)
+      # # if the env already exists, then it will output 0 for success or 1 for failure
+      # # on failure - run the create env step
+      # # ensure intermediate steps pass on failed grep: https://stackoverflow.com/questions/73066461/github-actions-why-an-intermediate-command-failure-in-shell-script-would-cause
+      # - name: eb describe-environment (aws)
+      #   id: describe
+      #   run: |
+      #     aws elasticbeanstalk describe-environments --environment-name ${{ env.ENV_NAME }} \
+      #     | grep '"EnvironmentName": "${{ env.ENV_NAME }}"' \
+      #     || echo "describe=$?" >> $GITHUB_OUTPUT \
+      #     && exit 0
 
-      - name: eb create environment
-        if: ${{ steps.describe.outputs.describe == 1 }}
-        uses: hmanzur/actions-aws-eb@v1.0.0
-        with:
-          command: "create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }} --verbose"
-        env:
-          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+      # - name: eb env
+      #   uses: hmanzur/actions-aws-eb@v1.0.0
+      #   with:
+      #     #TODO: setup PROD switch
+      #     command: "eb setenv DOPPLER_TOKEN=${{ secrets.DOPPLER_TOKEN_STAGE }}"
 
-      - name: eb deploy
-        uses: hmanzur/actions-aws-eb@v1.0.0
-        with:
-          command: "deploy ${{ env.ENV_NAME }} --region ${{ inputs.region }} --message ${{ github.ref }} --process --verbose"
-        env:
-          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+      # - name: eb create environment
+      #   if: ${{ steps.describe.outputs.describe == 1 }}
+      #   uses: hmanzur/actions-aws-eb@v1.0.0
+      #   with:
+      #     command: "create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }} --verbose"
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+
+      # - name: eb deploy
+      #   uses: hmanzur/actions-aws-eb@v1.0.0
+      #   with:
+      #     command: "deploy ${{ env.ENV_NAME }} --region ${{ inputs.region }} --message ${{ github.ref }} --process --verbose"
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
