@@ -89,7 +89,14 @@ jobs:
           echo '  01-install-doppler:' >> .ebextensions/02-env-doppler.config;
           echo '    command: (curl -Ls --tlsv1.2 --proto "=https" --retry 3 https://cli.doppler.com/install.sh || wget -t 3 -qO- https://cli.doppler.com/install.sh) | sudo sh ' >> .ebextensions/02-env-doppler.config;
 
-      - run: cat .ebextensions/02-env-doppler.config;
+      # - run: cat .ebextensions/02-env-doppler.config;
+      - name: eb create environment
+        if: ${{ steps.describe.outputs.describe == 1 }}
+        run: eb create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }} --verbose
+
+      - name: eb deploy
+        run: eb deploy ${{ env.ENV_NAME }} --region ${{ inputs.region }} --message ${{ github.ref }} --process --verbose
+
       # - name: eb create environment
       #   if: ${{ steps.describe.outputs.describe == 1 }}
       #   uses: hmanzur/actions-aws-eb@v1.0.0
