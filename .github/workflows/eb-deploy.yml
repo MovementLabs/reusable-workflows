@@ -81,7 +81,7 @@ jobs:
       - name: setup env
         # run: eb setenv DOPPLER_TOKEN=TEST
         run: >
-          echo ${{ secrets.DOPPLER_TOKEN_STAGE }} >> &gt;&gt; .ebextensions/02-env-doppler.config;
+          echo ${{ secrets.DOPPLER_TOKEN_STAGE }} >> .ebextensions/02-env-doppler.config;
           cat .ebextensions/02-env-doppler.config;
 
       # - name: eb create environment
