@@ -61,6 +61,18 @@ jobs:
 
       - run: eb --version
 
+      #TODO: setup PROD switch
+      - name: setup env
+        # run: eb setenv DOPPLER_TOKEN=TEST
+        run: |
+          echo 'option_settings:' > .ebextensions/02-env-doppler.config;
+          echo '  "aws:elasticbeanstalk:application:environment":' >> .ebextensions/02-env-doppler.config;
+          echo '    HISTIGNORE: DOPPLER_TOKEN*' >> .ebextensions/02-env-doppler.config;
+          echo '    DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_STAGE }} ' >> .ebextensions/02-env-doppler.config;
+          echo 'commands:' >> .ebextensions/02-env-doppler.config;
+          echo '  01-install-doppler:' >> .ebextensions/02-env-doppler.config;
+          echo '    command: (curl -Ls --tlsv1.2 --proto "=https" --retry 3 https://cli.doppler.com/install.sh || wget -t 3 -qO- https://cli.doppler.com/install.sh) | sudo sh ' >> .ebextensions/02-env-doppler.config;
+
       - name: eb init
         #   uses: hmanzur/actions-aws-eb@v1.0.0
         run: eb init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}
@@ -76,18 +88,6 @@ jobs:
           | grep '"EnvironmentName": "${{ env.ENV_NAME }}"' \
           || echo "describe=$?" >> $GITHUB_OUTPUT \
           && exit 0
-
-      #TODO: setup PROD switch
-      - name: setup env
-        # run: eb setenv DOPPLER_TOKEN=TEST
-        run: |
-          echo 'option_settings:' > .ebextensions/02-env-doppler.config;
-          echo '  "aws:elasticbeanstalk:application:environment":' >> .ebextensions/02-env-doppler.config;
-          echo '    HISTIGNORE: DOPPLER_TOKEN*' >> .ebextensions/02-env-doppler.config;
-          echo '    DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_STAGE }} ' >> .ebextensions/02-env-doppler.config;
-          echo 'commands:' >> .ebextensions/02-env-doppler.config;
-          echo '  01-install-doppler:' >> .ebextensions/02-env-doppler.config;
-          echo '    command: (curl -Ls --tlsv1.2 --proto "=https" --retry 3 https://cli.doppler.com/install.sh || wget -t 3 -qO- https://cli.doppler.com/install.sh) | sudo sh ' >> .ebextensions/02-env-doppler.config;
 
       # - run: cat .ebextensions/02-env-doppler.config;
       - name: eb create environment
