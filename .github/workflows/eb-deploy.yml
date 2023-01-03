@@ -64,17 +64,6 @@ jobs:
       - name: eb init
         #   uses: hmanzur/actions-aws-eb@v1.0.0
         run: eb init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
-
-      # - name: eb init
-      #   uses: hmanzur/actions-aws-eb@v1.0.0
-      #   with:
-      #     command: "init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}"
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
 
       # # search for environment name (matches terminated environments until they're fully removed after ~1hr)
       # # if the env already exists, then it will output 0 for success or 1 for failure
@@ -88,11 +77,9 @@ jobs:
       #     || echo "describe=$?" >> $GITHUB_OUTPUT \
       #     && exit 0
 
-      # - name: eb env
-      #   uses: hmanzur/actions-aws-eb@v1.0.0
-      #   with:
-      #     #TODO: setup PROD switch
-      #     command: "eb setenv DOPPLER_TOKEN=${{ secrets.DOPPLER_TOKEN_STAGE }}"
+      #TODO: setup PROD switch
+      - name: eb env
+        run: eb setenv DOPPLER_TOKEN=${{ secrets.DOPPLER_TOKEN_STAGE }}
 
       # - name: eb create environment
       #   if: ${{ steps.describe.outputs.describe == 1 }}
