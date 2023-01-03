@@ -80,8 +80,11 @@ jobs:
       #TODO: setup PROD switch
       - name: setup env
         # run: eb setenv DOPPLER_TOKEN=TEST
-        run: >
-          echo ${{ secrets.DOPPLER_TOKEN_STAGE }} >> .ebextensions/02-env-doppler.config;
+        run: |
+          echo 'option_settings:' > .ebextensions/02-env-doppler.config;
+          echo '  "aws:elasticbeanstalk:application:environment":' >> .ebextensions/02-env-doppler.config;
+          echo '    HISTIGNORE: DOPPLER_TOKEN*' >> .ebextensions/02-env-doppler.config;
+          echo '    DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_STAGE }} ' >> .ebextensions/02-env-doppler.config;
           cat .ebextensions/02-env-doppler.config;
 
       # - name: eb create environment
