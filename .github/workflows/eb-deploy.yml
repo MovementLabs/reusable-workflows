@@ -51,8 +51,6 @@ jobs:
             01-install-doppler:
               command: (curl -Ls --tlsv1.2 --proto "=https" --retry 3 https://cli.doppler.com/install.sh || wget -t 3 -qO- https://cli.doppler.com/install.sh) | sudo sh
           EOF
-      - run: ls ./.ebextensions
-      - run: cat ./.ebextensions/02-env-doppler.config
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -75,27 +73,14 @@ jobs:
 
       - run: eb --version
 
-      # #TODO: setup PROD switch
-      # # - name: setup env
-      # #   # run: eb setenv DOPPLER_TOKEN=TEST
-      # #   run: |
-      # #     echo 'option_settings:' > .ebextensions/02-env-doppler.config;
-      # #     echo '  "aws:elasticbeanstalk:application:environment":' >> .ebextensions/02-env-doppler.config;
-      # #     echo '    HISTIGNORE: DOPPLER_TOKEN*' >> .ebextensions/02-env-doppler.config;
-      # #     echo '    DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_STAGE }} ' >> .ebextensions/02-env-doppler.config;
-      # #     echo 'commands:' >> .ebextensions/02-env-doppler.config;
-      # #     echo '  01-install-doppler:' >> .ebextensions/02-env-doppler.config;
-      # #     echo '    command: (curl -Ls --tlsv1.2 --proto "=https" --retry 3 https://cli.doppler.com/install.sh || wget -t 3 -qO- https://cli.doppler.com/install.sh) | sudo sh ' >> .ebextensions/02-env-doppler.config;
-      # # - run: cat .ebextensions/02-env-doppler.config;
-
       - name: eb init
         #   uses: hmanzur/actions-aws-eb@v1.0.0
         run: eb init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}
 
-      # # # search for environment name (matches terminated environments until they're fully removed after ~1hr)
-      # # # if the env already exists, then it will output 0 for success or 1 for failure
-      # # # on failure - run the create env step
-      # # # ensure intermediate steps pass on failed grep: https://stackoverflow.com/questions/73066461/github-actions-why-an-intermediate-command-failure-in-shell-script-would-cause
+      # search for environment name (matches terminated environments until they're fully removed after ~1hr)
+      # if the env already exists, then it will output 0 for success or 1 for failure
+      # on failure - run the create env step
+      # ensure intermediate steps pass on failed grep: https://stackoverflow.com/questions/73066461/github-actions-why-an-intermediate-command-failure-in-shell-script-would-cause
       - name: eb describe-environment (aws)
         id: describe
         run: |
