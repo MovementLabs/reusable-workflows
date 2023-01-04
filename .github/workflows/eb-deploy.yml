@@ -57,10 +57,10 @@ jobs:
         run: |
           if [ -z ${{inputs.tags}} ];
           then
-            ENV_NAME=${{ inputs.application_name }}-${{inputs.environment_name}}-${{inputs.tags}}
+            ENV_NAME=${{ inputs.application_name }}-${{inputs.environment_name}}
             echo "ENV_NAME=${ENV_NAME//./-}" >> $GITHUB_ENV
           else
-            ENV_NAME=${{ inputs.application_name }}-${{inputs.environment_name}}
+            ENV_NAME=${{ inputs.application_name }}-${{inputs.environment_name}}-${{inputs.tags}}
             echo "ENV_NAME=${ENV_NAME//./-}" >> $GITHUB_ENV
           fi
 
