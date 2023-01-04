@@ -60,7 +60,8 @@ jobs:
             ENV_NAME=${{ inputs.application_name }}-${{inputs.environment_name}}-${{inputs.tags}}
             echo "ENV_NAME=${ENV_NAME//./-}" >> $GITHUB_ENV
           else
-            ENV_NAME=${{ inputs.application_name }}-${{inputs.environment_name}}
+            PR_NUM=${{ github.event.pull_request.number }}
+            ENV_NAME=${{ inputs.application_name }}-${{inputs.environment_name}}-$PR_NUM
             echo "ENV_NAME=${ENV_NAME//./-}" >> $GITHUB_ENV
           fi
 
