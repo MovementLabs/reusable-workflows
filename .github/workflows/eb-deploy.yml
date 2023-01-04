@@ -40,18 +40,6 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      # - run: |
-      #     cat << EOF > ./.ebextensions/02-env-doppler.config
-      #     option_settings:
-      #       "aws:elasticbeanstalk:application:environment":
-      #         HISTIGNORE: DOPPLER_TOKEN*
-      #         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_STAGE }}
-
-      #     commands:
-      #       01-install-doppler:
-      #         command: (curl -Ls --tlsv1.2 --proto "=https" --retry 3 https://cli.doppler.com/install.sh || wget -t 3 -qO- https://cli.doppler.com/install.sh) | sudo sh
-      #     EOF
-
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
@@ -74,7 +62,6 @@ jobs:
       - run: eb --version
 
       - name: eb init
-        #   uses: hmanzur/actions-aws-eb@v1.0.0
         run: eb init ${{ inputs.application_name }} --region ${{ inputs.region }} --platform ${{ inputs.platform }}
 
       # search for environment name (matches terminated environments until they're fully removed after ~1hr)
@@ -95,20 +82,3 @@ jobs:
 
       - name: eb deploy
         run: eb deploy ${{ env.ENV_NAME }} --region ${{ inputs.region }} --message ${{ github.ref }} --process --verbose
-
-      # - name: eb create environment
-      #   if: ${{ steps.describe.outputs.describe == 1 }}
-      #   uses: hmanzur/actions-aws-eb@v1.0.0
-      #   with:
-      #     command: "create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }} --verbose"
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
-
-      # - name: eb deploy
-      #   uses: hmanzur/actions-aws-eb@v1.0.0
-      #   with:
-      #     command: "deploy ${{ env.ENV_NAME }} --region ${{ inputs.region }} --message ${{ github.ref }} --process --verbose"
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
