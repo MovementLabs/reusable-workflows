@@ -42,7 +42,7 @@ jobs:
           python-version: "3.8"
           cache: pip
       - name: install ebcli
-        run: pip install awsebcli==3.7.4
+        run: pip install awsebcli
 
       - name: Configure AWS credentials from Test account
         uses: aws-actions/configure-aws-credentials@v1-node16
