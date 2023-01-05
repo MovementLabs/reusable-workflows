@@ -20,10 +20,23 @@ on:
       platform:
         default: python-3.8 # eb platform list --region us-east-2
         type: string
+      db_engine:
+        default: postgres
+        type: string
+      db_instance:
+        default: db.t3.micro
+        type: string
+      db_size:
+        default: 5
+        type: number
       tags:
         type: string
     secrets:
       DOPPLER_TOKEN_STAGE:
+        required: true
+      DB_USER:
+        required: true
+      DB_PASSWORD:
         required: true
 
 jobs:
@@ -83,7 +96,16 @@ jobs:
 
       - name: eb create environment
         if: ${{ steps.describe.outputs.describe == 1 }}
-        run: eb create ${{ env.ENV_NAME }} --region ${{ inputs.region }} --platform ${{ inputs.platform }} --envvars DOPPLER_TOKEN=${{secrets.DOPPLER_TOKEN_STAGE}} --verbose
+        run: eb create ${{ env.ENV_NAME }} \
+          --region ${{ inputs.region }} \
+          --platform ${{ inputs.platform }} \
+          --envvars DOPPLER_TOKEN=${{secrets.DOPPLER_TOKEN_STAGE}} \
+          -db -db.engine ${{ inputs.db_engine }} \
+          -db.i ${{ inputs.instance_type }} \
+          -db.size ${{ inputs.db_size }} \
+          -db.user ${{ secrets.DB_USER }} \
+          -db.pass ${{ secrets.DB_PASSWORD }} \
+          --verbose
 
       - name: eb deploy
         run: eb deploy ${{ env.ENV_NAME }} --region ${{ inputs.region }} --message ${{ github.ref }} --process --verbose
