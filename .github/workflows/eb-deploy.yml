@@ -34,9 +34,9 @@ on:
     secrets:
       DOPPLER_TOKEN_STAGE:
         required: true
-      DB_USER:
+      POSTGRES_USERNAME:
         required: true
-      DB_PASSWORD:
+      POSTGRES_PASSWORD:
         required: true
 
 jobs:
@@ -103,8 +103,8 @@ jobs:
           -db -db.engine ${{ inputs.db_engine }} \
           -db.i ${{ inputs.instance_type }} \
           -db.size ${{ inputs.db_size }} \
-          -db.user ${{ secrets.DB_USER }} \
-          -db.pass ${{ secrets.DB_PASSWORD }} \
+          -db.user ${{ secrets.POSTGRES_USERNAME }} \
+          -db.pass ${{ secrets.POSTGRES_PASSWORD }} \
           --verbose
 
       - name: eb deploy
